@@ -18,12 +18,12 @@ error = True
 # regularise naturally thru instruction, by offering up more data about what seems to be interesting,
 # but do not claim that the new materials are positive or negative examples, just neutral!
 
-
+defaultresourcedirectory = "/home/jussi/data/incident/featuremonitor/"
 
 def getCSVdata(csvfile):
     """opens a csv file, reads it in and returns a 2 dimensional list with the data."""
     try:
-        with open("/home/jussi/aktuellt/2018.recfut/featuremonitor/analyzed_0.7.csv") as ff:
+        with open(defaultresourcedirectory + "analyzed_0.7.csv") as ff:
             reader = csv.reader(ff)
             datalist=[]
             for row in reader:
@@ -36,7 +36,7 @@ def getCSVdata(csvfile):
         print("Could not open file {}".format(csvfile))
 
 
-def getfilelist(resourcedirectory="/home/jussi/data/recfut/featuremonitor/", fileexpression=r"2018-.*"):
+def getfilelist(resourcedirectory=defaultresourcedirectory, fileexpression=r"2018-.*"):
     pattern = re.compile(fileexpression)
     filenamelist = []
     for filenamecandidate in os.listdir(resourcedirectory):
@@ -105,8 +105,8 @@ dailyvocab = {}
 topicvocab = {}
 sourcetopicvocab = {}
 antaldokument = 0
-resourcedirectory = "/home/jussi/data/recfut/featuremonitor/"
-outputdirectory = "/home/jussi/data/recfut/featuremonitor/"
+resourcedirectory = defaultresourcedirectory
+outputdirectory = defaultresourcedirectory + "scratch"
 fileexpression = r"2018-.*[0-9]$"
 
 
@@ -125,6 +125,7 @@ def readthefiles():
     feldokument = 0
     words = "placeholder"
     t2 = "zip"
+    f = ""
     for dayfile in filelist:
         antalfiler += 1
         dailyvocab[dayfile] = Counter()
@@ -184,29 +185,29 @@ def readthefiles():
     # do katz stats per cluster_id and per date
 
 
-readdata = False
+readdata = True
 if __name__ == '__main__':
-    projectdirectory = "/home/jussi/aktuellt/Recfut/featuremonitor/"
+    projectdirectory = defaultresourcedirectory
     if readdata:
         readthefiles()
     else:
         datatag = "9"
-        with open(outputdirectory + "vocab{}.json".format(datatag), "r+") as f1:
+        with open(projectdirectory + "vocab{}.json".format(datatag), "r+") as f1:
             vocab = json.loads(f1.read())
-        with open(outputdirectory + "dailyvocab{}.json".format(datatag), "r+") as f2:
+        with open(projectdirectory + "dailyvocab{}.json".format(datatag), "r+") as f2:
             dailyvocab = json.loads(f2.read())
             for item in dailyvocab:
                 documentfrequency.update(dailyvocab[item])
-                antaldokument += 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,,,,
-        with open(outputdirectory + "sourcetopicvocab{}.json".format(datatag), "r+") as f3:
+                antaldokument += 1
+        with open(projectdirectory + "sourcetopicvocab{}.json".format(datatag), "r+") as f3:
             sourcetopicvocab = json.loads(f3.read())
-        with open(outputdirectory + "topicvocab{}.json".format(datatag), "r+") as f4:
+        with open(projectdirectory + "topicvocab{}.json".format(datatag), "r+") as f4:
             topicvocab = json.loads(f4.read())
     hapaxfilteredvocab = comb(vocab)
     oseven = Counter()
     antaloseven = 0
     osevendocumentfrequency = Counter()
-    with open(projectdirectory + "analyzed_0.7.csv") as ff:
+    with open(projectdirectory + "analyzed_0.7.csv", "r+") as ff:
         r = csv.reader(ff)
         for rr in r:
             antaloseven += 1
