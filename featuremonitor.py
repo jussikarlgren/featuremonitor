@@ -106,7 +106,7 @@ topicvocab = {}
 sourcetopicvocab = {}
 antaldokument = 0
 resourcedirectory = defaultresourcedirectory
-outputdirectory = defaultresourcedirectory + "scratch"
+outputdirectory = defaultresourcedirectory + "scratch/"
 fileexpression = r"2018-.*[0-9]$"
 
 
@@ -147,12 +147,17 @@ def readthefiles():
                             t2 = "zip"
                         if t2 not in sourcetopicvocab:
                             sourcetopicvocab[t2] = Counter()
-                        antaldokument += 1
-                        words = nltk.word_tokenize(i["fragment"].lower())
+                        try:
+                            words = nltk.word_tokenize(i["fragment"].lower())
+                            antaldokument += 1
+                        except KeyError:
+                            words = []
+                            feldokument += 1
+                            logger("KeyError with {} in {}".format(eeee.args, i), debug)
                         vocab.update(words)
                         wordset = set(words)
                         documentfrequency.update(wordset)
-                        dailyvocab[f].update(wordset)
+                        dailyvocab[dayfile].update(wordset)
                         for t1 in t1s:
                             topicvocab[t1].update(wordset)
                         sourcetopicvocab[t2].update(wordset)
@@ -160,10 +165,10 @@ def readthefiles():
                         pass  # non-english
                 except Exception as eeee:
                     feldokument += 1
-                    logger("Parse error {} with {} after {}, {}".format(eeee, f, t2, words), False)
+                    logger("Error {} with {} after {}, {} {}".format(type(eeee), eeee.args, t2, words, i), debug)
         except Exception as ee:
             logger("File error {} for {}".format(ee, f), monitor)
-        logger("Antal filer: {}; just klar med {}; antal dokument: {}; antal feldokument: {}".format(antalfiler, f,
+        logger("Antal filer: {}; just klar med {}; antal dokument: {}; antal feldokument: {}".format(antalfiler, dayfile,
                                                                                                      antaldokument,
                                                                                                      feldokument),
                monitor)
