@@ -190,23 +190,24 @@ def readthefiles():
     # do katz stats per cluster_id and per date
 
 
-readdata = True
+readdata = False
 if __name__ == '__main__':
     projectdirectory = defaultresourcedirectory
     if readdata:
         readthefiles()
     else:
-        datatag = "9"
-        with open(projectdirectory + "vocab{}.json".format(datatag), "r+") as f1:
+        datadirectory = outputdirectory
+        datatag = "12"
+        with open(datadirectory + "vocab{}.json".format(datatag), "r+") as f1:
             vocab = json.loads(f1.read())
-        with open(projectdirectory + "dailyvocab{}.json".format(datatag), "r+") as f2:
+        with open(datadirectory + "dailyvocab{}.json".format(datatag), "r+") as f2:
             dailyvocab = json.loads(f2.read())
             for item in dailyvocab:
                 documentfrequency.update(dailyvocab[item])
                 antaldokument += 1
-        with open(projectdirectory + "sourcetopicvocab{}.json".format(datatag), "r+") as f3:
+        with open(datadirectory + "sourcetopicvocab{}.json".format(datatag), "r+") as f3:
             sourcetopicvocab = json.loads(f3.read())
-        with open(projectdirectory + "topicvocab{}.json".format(datatag), "r+") as f4:
+        with open(datadirectory + "topicvocab{}.json".format(datatag), "r+") as f4:
             topicvocab = json.loads(f4.read())
     hapaxfilteredvocab = comb(vocab)
     oseven = Counter()
